@@ -1,4 +1,12 @@
 {
     "python-envs.pythonProjects": [],
-    "python.defaultInterpreterPath": "${workspaceFolder}/.env/bin/python"
+    "python.defaultInterpreterPath": "/Users/abdulbasith/Developer/Experiments/nano-sglang/.env/bin/python",
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.extraPaths": [
+        "/Users/abdulbasith/Developer/Experiments/nano-sglang",
+        "/Users/abdulbasith/Developer/Experiments/nano-sglang/.env/lib/python3.13/site-packages"
+    ],
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.useLibraryCodeForTypes": true,
+    "python.analysis.indexing": true
 }

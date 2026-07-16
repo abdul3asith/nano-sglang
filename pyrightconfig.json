@@ -1,0 +1,22 @@
+{
+  "include": [
+    "nano_sglang",
+    "deployment",
+    "scripts",
+    "examples"
+  ],
+  "exclude": [
+    ".env",
+    ".venv",
+    "**/__pycache__"
+  ],
+  "venvPath": ".",
+  "venv": ".env",
+  "extraPaths": [
+    ".",
+    ".env/lib/python3.13/site-packages"
+  ],
+  "pythonVersion": "3.13",
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true
+}

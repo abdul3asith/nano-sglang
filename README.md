@@ -51,7 +51,7 @@ You need a GPU. A single small one (T4, L4, or A10) is plenty for a 0.5B to 1B m
 modal run modal_app.py
 ```
 
-## How it is put together
+## How it is put together (update changed file structure[complex].)
 
 ```
 nanosglang/
@@ -79,7 +79,7 @@ Numbers land as each stage does. The harness in `bench/` tracks throughput (toke
 
 ## Following along
 
-I post the build logs, benchmarks, diagrams, and the bugs on X: [@yourhandle](https://x.com/basithtwts). If you want to see the whole thing come together in real time, that is the place.
+I post the build logs, benchmarks, diagrams, and the bugs on X: [@basithtwts](https://x.com/basithtwts). If you want to see the whole thing come together in real time, that is the place.
 
 Questions, corrections, and "you got this wrong" issues are all welcome. This is a learning project, so being told where I am wrong is the point.
 
