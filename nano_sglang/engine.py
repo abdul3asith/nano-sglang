@@ -92,6 +92,41 @@ class NanoSGLangEngine:
             for request in requests
         ]
 
+    def stream_generate(self, prompt: str, max_new_tokens: int | None = None):
+        request = GenerationRequest(
+            prompt=prompt,
+            max_new_tokens=max_new_tokens or self.config.max_new_tokens,
+        )
+        encoded = self.tokenizer_manager.encode(request.prompt)
+        input_ids = encoded["input_ids"]
+        attention_mask = encoded.get("attention_mask")
+
+        request.prompt_token_ids = input_ids[0].tolist()
+        logits, request.past_key_values = self.model_runner.prefill(input_ids, attention_mask)
+        request.status = RequestStatus.DECODING
+
+        if request.max_new_tokens <= 0:
+            return
+
+        next_token_id = self.sampler.sample(logits)
+        while not request.is_finished:
+            accepted = self._accept_or_finish(
+                request,
+                next_token_id,
+                GenerationMetrics(prompt_tokens=input_ids.shape[-1]),
+            )
+            if not accepted:
+                break
+
+            yield self.tokenizer_manager.decode_token(next_token_id)
+
+            last_token = torch.tensor([[next_token_id]], device=self.device, dtype=torch.long)
+            logits, request.past_key_values = self.model_runner.decode_one_token(
+                last_token,
+                request.past_key_values,
+            )
+            next_token_id = self.sampler.sample(logits)
+
     def _run_single_request(self, request: GenerationRequest) -> GenerationMetrics:
         metrics = self._prefill_request(request)
         while not request.is_finished:
@@ -145,17 +180,18 @@ class NanoSGLangEngine:
         request: GenerationRequest,
         token_id: int,
         metrics: GenerationMetrics,
-    ) -> None:
+    ) -> bool:
         eos_token_id = self.config.eos_token_id
         if eos_token_id is None:
             eos_token_id = self.tokenizer_manager.eos_token_id
 
         if eos_token_id is not None and token_id == eos_token_id:
             request.mark_finished("eos")
-            return
+            return False
 
         request.append_token(token_id)
         metrics.generated_tokens += 1
 
         if request.generated_tokens >= request.max_new_tokens:
             request.mark_finished("length")
+        return True

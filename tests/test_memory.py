@@ -1,6 +1,6 @@
 import torch
 
-from nano_sglang.memory import ContiguousKVCache, PagedKVCache
+from nano_sglang.memory import ContiguousKVCache, PagedKVCache, RadixCache
 
 
 def test_contiguous_kv_cache_append_gather_free():
@@ -41,3 +41,14 @@ def test_paged_kv_cache_reuses_blocks():
 
     cache.free("req")
     assert cache.block_manager.used_blocks == 0
+
+
+def test_radix_cache_finds_longest_prefix():
+    cache = RadixCache()
+    cache.insert([1, 2], "a")
+    cache.insert([1, 2, 3], "b")
+
+    prefix, value = cache.longest_prefix([1, 2, 3, 4])
+
+    assert prefix == [1, 2, 3]
+    assert value == "b"
