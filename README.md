@@ -51,20 +51,27 @@ You need a GPU. A single small one (T4, L4, or A10) is plenty for a 0.5B to 1B m
 modal run modal_app.py
 ```
 
-## How it is put together (update changed file structure[complex].)
+## How it is put together
 
 ```
-nanosglang/
-  model.py         weights + transformer forward pass
-  kv_cache.py      paged allocator + block tables
-  radix_cache.py   radix tree, prefix match, eviction
-  scheduler.py     request queue, continuous batching
-  executor.py      runs a batch, sampling
-  engine.py        ties it together
-  frontend/        DSL (Domain Specific Lang)
+nano_sglang/
+  engine.py        ties the runtime together
+  config.py        runtime configuration
+  tokenizer/       tokenization and detokenization
+  scheduler/       request lifecycle and naive scheduling
+  model/           Hugging Face loading and forward execution
+  memory/          contiguous and paged KV-cache learning structures
+  attention/       reference attention and naive paged attention
+  sampling/        logits processing and token sampling
+  server/          optional API wrapper
+  utils/           logging and metrics helpers
+deployment/        Modal image and remote GPU entry point
+scripts/           local runs and benchmarks
+examples/          small example programs
+tests/             unit tests for runtime pieces
 ```
 
-The request path in one sentence: the scheduler pulls a request, checks the radix tree for a reusable prefix, asks the paged allocator for blocks, and hands a batch to the executor, which runs the forward pass and returns one token per sequence, then the loop repeats.
+The current request path is intentionally naive: tokenize the prompt, run prefill once through a Hugging Face model, decode one token at a time with Hugging Face `past_key_values`, sample the next token, and detokenize the result. The scheduler and paged-cache code are present as learning components, but optimized paged attention is not wired into model execution yet.
 
 ## Benchmarks
 

@@ -107,11 +107,16 @@ class NanoSGLangEngine:
 
         request.prompt_token_ids = input_ids[0].tolist()
         logits, request.past_key_values = self.model_runner.prefill(input_ids, attention_mask)
-        request.status = RequestStatus.DECODING
-
-        next_token_id = self.sampler.sample(logits)
         metrics = GenerationMetrics(prompt_tokens=input_ids.shape[-1])
         metrics.time_to_first_token = timer.elapsed()
+
+        if request.max_new_tokens <= 0:
+            request.mark_finished("length")
+            metrics.total_seconds = timer.elapsed()
+            return metrics
+
+        request.status = RequestStatus.DECODING
+        next_token_id = self.sampler.sample(logits)
         self._accept_or_finish(request, next_token_id, metrics)
         metrics.total_seconds = timer.elapsed()
         return metrics

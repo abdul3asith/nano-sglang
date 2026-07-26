@@ -15,10 +15,8 @@ class Sampler:
     ):
         self.temperature = temperature
         self.processor = LogitsProcessor(temperature, top_p, top_k)
-        self.generator = None
         if seed is not None:
-            self.generator = torch.Generator()
-            self.generator.manual_seed(seed)
+            torch.manual_seed(seed)
 
     def sample(self, logits: torch.Tensor) -> int:
         next_token_logits = logits[:, -1, :]
@@ -28,5 +26,5 @@ class Sampler:
 
         processed = self.processor(next_token_logits)
         probs = torch.softmax(processed, dim=-1)
-        token = torch.multinomial(probs, num_samples=1, generator=self.generator)
+        token = torch.multinomial(probs, num_samples=1)
         return int(token[0, 0].item())

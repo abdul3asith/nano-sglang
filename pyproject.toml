@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nano-sglang"
+version = "0.1.0"
+description = "A tiny learning-first LLM inference runtime inspired by SGLang."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "torch",
+  "transformers",
+]
+
+[project.optional-dependencies]
+deployment = ["modal"]
+dev = ["pytest"]
+server = ["fastapi", "uvicorn"]
+
+[tool.setuptools.packages.find]
+include = ["nano_sglang*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
