@@ -4,7 +4,7 @@ from typing import Any
 
 import torch
 
-from nano_sglang.model.forward_batch import ForwardBatch
+from .forward_batch import ForwardBatch
 
 
 class ModelRunner:

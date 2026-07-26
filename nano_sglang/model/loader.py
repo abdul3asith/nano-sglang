@@ -1,7 +1,7 @@
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-from nano_sglang.config import EngineConfig
+from ..config import EngineConfig
 
 
 def resolve_device(device: str) -> str:
