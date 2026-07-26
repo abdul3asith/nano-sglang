@@ -1,5 +1,6 @@
 STAGES.md
 .env
 .venv
-nanosglang/__pycache__
+__pycache__/
+*.py[cod]
 LEARN.md
