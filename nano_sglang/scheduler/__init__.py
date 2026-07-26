@@ -1,6 +1,6 @@
-from nano_sglang.scheduler.batch import BatchMode, ScheduleBatch
-from nano_sglang.scheduler.request import GenerationRequest, RequestStatus
-from nano_sglang.scheduler.scheduler import Scheduler
+from .batch import BatchMode, ScheduleBatch
+from .request import GenerationRequest, RequestStatus
+from .scheduler import Scheduler
 
 __all__ = [
     "BatchMode",

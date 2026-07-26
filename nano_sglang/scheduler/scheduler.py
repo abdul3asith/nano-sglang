@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from collections import deque
 
-from nano_sglang.scheduler.batch import BatchMode, ScheduleBatch
-from nano_sglang.scheduler.request import GenerationRequest, RequestStatus
+from .batch import BatchMode, ScheduleBatch
+from .request import GenerationRequest, RequestStatus
 
 
 class Scheduler:
