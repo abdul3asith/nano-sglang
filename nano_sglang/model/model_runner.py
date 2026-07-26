@@ -21,7 +21,9 @@ class ModelRunner:
         )
 
     @torch.no_grad()
-    def prefill(self, input_ids: torch.Tensor, attention_mask: torch.Tensor | None = None):
+    def prefill(
+        self, input_ids: torch.Tensor, attention_mask: torch.Tensor | None = None
+    ):
         outputs = self.forward(
             ForwardBatch(
                 input_ids=input_ids,
